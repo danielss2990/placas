@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b3d91">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Placas">
+  <title>Placas — Reconhecimento e Débitos</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="{{ url_for('static', filename='icons/icon.svg') }}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="logo">▣</span> Placas</div>
+  <div id="ocr-status" class="pill" title="Status do OCR">…</div>
+</header>
+
+<main>
+  <!-- ======================= RECONHECER ======================= -->
+  <section id="view-scan" class="view active">
+    <h1>Reconhecer placa</h1>
+    <div class="card">
+      <div class="camera-box">
+        <video id="video" playsinline muted hidden></video>
+        <img id="preview" alt="" hidden>
+        <div id="camera-placeholder" class="placeholder">Abra a câmera ou envie uma foto do veículo</div>
+      </div>
+      <div class="actions">
+        <button id="btn-camera" class="btn">📷 Câmera ao vivo</button>
+        <button id="btn-capture" class="btn primary" hidden>Capturar</button>
+        <label class="btn">🖼️ Foto / galeria
+          <input id="file-input" type="file" accept="image/*" capture="environment" hidden>
+        </label>
+      </div>
+      <form id="manual-form" class="inline-form">
+        <input id="manual-plate" placeholder="ou digite a placa (ABC1D23)" maxlength="8" autocapitalize="characters">
+        <button class="btn">Consultar</button>
+      </form>
+    </div>
+    <div id="scan-result"></div>
+  </section>
+
+  <!-- ======================= VEÍCULOS ======================= -->
+  <section id="view-vehicles" class="view">
+    <h1>Veículos</h1>
+    <div class="card">
+      <form id="search-form" class="inline-form">
+        <input id="search-q" placeholder="Buscar por placa ou proprietário">
+        <button class="btn">Buscar</button>
+        <button type="button" id="btn-new-vehicle" class="btn primary">+ Novo</button>
+      </form>
+    </div>
+    <div id="vehicle-list" class="list"></div>
+  </section>
+
+  <!-- ======================= DETALHE ======================= -->
+  <section id="view-vehicle" class="view">
+    <button class="btn link" data-nav="vehicles">← Voltar</button>
+    <div id="vehicle-detail"></div>
+  </section>
+
+  <!-- ======================= PAGAMENTOS ======================= -->
+  <section id="view-payments" class="view">
+    <h1>Pagamentos</h1>
+    <div class="card">
+      <div class="chips" id="payment-filters">
+        <button class="chip active" data-status="">Todos</button>
+        <button class="chip" data-status="PENDENTE">Pendentes</button>
+        <button class="chip" data-status="APROVADO">Aprovados</button>
+        <button class="chip" data-status="CANCELADO">Cancelados</button>
+        <button class="chip" data-status="ESTORNADO">Estornados</button>
+      </div>
+    </div>
+    <div id="payment-list" class="list"></div>
+  </section>
+
+  <!-- ======================= PAINEL ======================= -->
+  <section id="view-dashboard" class="view">
+    <h1>Painel</h1>
+    <div id="stats" class="stats"></div>
+    <h2>Formas de pagamento aceitas</h2>
+    <div id="methods" class="list"></div>
+    <h2>Últimas leituras</h2>
+    <div id="recognitions" class="list"></div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <button data-nav="scan" class="active"><span>📷</span>Reconhecer</button>
+  <button data-nav="vehicles"><span>🚗</span>Veículos</button>
+  <button data-nav="payments"><span>💳</span>Pagamentos</button>
+  <button data-nav="dashboard"><span>📊</span>Painel</button>
+</nav>
+
+<dialog id="modal">
+  <form method="dialog" class="modal-close"><button aria-label="Fechar">✕</button></form>
+  <div id="modal-body"></div>
+</dialog>
+
+<div id="toast" class="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>
